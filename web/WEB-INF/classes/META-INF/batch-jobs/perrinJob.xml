@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job id="perrinJob" xmlns="http://xmlns.jcp.org/xml/ns/javaee"  version="1.0">
+    <properties>
+        <property name="input_file" value="input.txt"/>
+        <property name="output_file" value="output.txt"/>
+    </properties>
+    <listeners>
+        <listener ref="itta.cours.batches.PerrinJobListener" />
+    </listeners>
+  
+    <step id="mychunk" next="flow1">
+        <chunk item-count="1">
+            <reader ref="itta.cours.batches.PerrinReader"></reader>
+            <processor ref="itta.cours.batches.PerrinProcessor"></processor>
+            <writer ref="itta.cours.batches.PerrinWriter"></writer>
+        </chunk>
+    </step>
+    <flow id="flow1">
+        <step id="mytask1" next="decision">
+            <listeners>
+                <listener ref="itta.cours.batches.PerrinMyTaskListener" />
+            </listeners>
+            <batchlet ref="itta.cours.batches.PerrinBatchlet1"></batchlet>
+       </step>      
+       <decision id="decision" ref="itta.cours.batches.PerrinDecision">
+            <next on="value1" to="mytask2"></next>
+            <next on="value2" to="mytask3"></next>
+       </decision>
+        <step id="mytask2">
+            <listeners>
+                <listener ref="itta.cours.batches.PerrinMyTaskListener" />
+            </listeners>
+            <batchlet ref="itta.cours.batches.PerrinBatchlet"></batchlet>
+            <end on="COMPLETED"/>
+        </step>
+        <step id="mytask3">
+            <listeners>
+                <listener ref="itta.cours.batches.PerrinMyTaskListener" />
+            </listeners>
+            <batchlet ref="itta.cours.batches.PerrinBatchlet"></batchlet>
+            <end on="COMPLETED"/>
+        </step>
+    </flow>
+</job>
